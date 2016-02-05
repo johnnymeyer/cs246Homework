@@ -63,6 +63,10 @@ public class ScriptureActivity extends AppCompatActivity {
 
         Intent i = new Intent(ScriptureActivity.this, DisplayActivity.class);
         startActivity(i);
+        editBook.setText("");
+        editChapter.setText("");
+        editVerse.setText("");
+
     }
 
 }

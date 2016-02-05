@@ -1,6 +1,7 @@
 package com.cs246.johnmeyer.scriptures;
 
 import android.content.Intent;
+//import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,9 +31,5 @@ public class DisplayActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-    }
-    public void onClickBack(View v) {
-        Intent i = new Intent(DisplayActivity.this, ScriptureActivity.class);
-        startActivity(i);
     }
 }
