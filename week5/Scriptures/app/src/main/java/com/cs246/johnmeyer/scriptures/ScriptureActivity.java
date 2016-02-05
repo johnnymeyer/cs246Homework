@@ -61,7 +61,6 @@ public class ScriptureActivity extends AppCompatActivity {
         passedText = "Your favorite scripture is " + editBook.getText() + " " +
                 editChapter.getText() + ":" + editVerse.getText();
 
-        
         Intent i = new Intent(ScriptureActivity.this, DisplayActivity.class);
         startActivity(i);
         editBook.setText("");
