@@ -29,7 +29,8 @@
         android:id="@+id/listView"
         android:layout_below="@+id/progressBar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/button" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -37,10 +38,11 @@
         android:layout_height="wrap_content"
         android:text="CREATE"
         android:id="@+id/button"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/listView"
+        android:onClick="onClickWriteFile"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="82dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -49,7 +51,8 @@
         android:text="LOAD"
         android:id="@+id/button2"
         android:layout_alignTop="@+id/button"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickLoadFile" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
