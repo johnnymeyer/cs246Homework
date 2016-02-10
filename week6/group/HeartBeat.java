@@ -2,7 +2,7 @@
 
 public class HeartBeat implements Runnable {
 
-	private boolean flag = true;
+	private volatile boolean flag = true;
 
 	public void run() {
 		while (flag) {
