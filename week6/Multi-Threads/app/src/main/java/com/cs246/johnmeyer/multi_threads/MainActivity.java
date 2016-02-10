@@ -10,15 +10,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     FileOutputStream outputStream;
+    String fileName = "numbers.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickWriteFile(View v) {
-        String fileName = "numbers.txt";
+
         try {
             outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
             OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
             try {
                 for (int i = 1; i < 11; i++) {
-                    writer.write(i + '\n');
+                    writer.write(i);
                     try {
                         Thread.sleep(250);
                     }
@@ -76,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 writer.close();
+
+                Toast.makeText(getApplicationContext(), "File Created", Toast.LENGTH_LONG).show();
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -87,6 +100,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickLoadFile(View v) {
+        List<String> contents = new ArrayList<String>();
+        File filesDir = getFilesDir();
+        File toOpen = new File(filesDir, fileName);
+        ListView listViewHandle = (ListView) findViewById(R.id.listView);
+
+
+        String[] values = new String[] { "Android List View",
+                "Adapter implementation",
+                "Simple List View In Android",
+                "Create List View Android",
+                "Android Example",
+                "List View Source Code",
+                "List View Array Adapter",
+                "Android Example List View"
+        };
+
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(toOpen));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                contents.add(line);
+                try {
+                    Thread.sleep(250);
+                }
+                catch (InterruptedException e) {
+                    // should never get here
+                }
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, contents);
+
+        listViewHandle.setAdapter(arrayAdapter);
 
     }
 }
