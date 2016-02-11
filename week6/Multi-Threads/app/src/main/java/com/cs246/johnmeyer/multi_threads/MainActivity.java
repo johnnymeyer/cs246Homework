@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     FileOutputStream outputStream;
     String fileName = "numbers.txt";
+    ArrayAdapter<String> arrayAdapter;
+    ListView listViewHandle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 for (int i = 1; i < 11; i++) {
-                    writer.write(i);
+                    writer.write(i + "\n");
                     try {
                         Thread.sleep(250);
                     }
@@ -103,19 +106,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> contents = new ArrayList<String>();
         File filesDir = getFilesDir();
         File toOpen = new File(filesDir, fileName);
-        ListView listViewHandle = (ListView) findViewById(R.id.listView);
-
-
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
-
+        listViewHandle = (ListView) findViewById(R.id.listView);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(toOpen));
@@ -136,10 +127,15 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(e);
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+        arrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, contents);
 
         listViewHandle.setAdapter(arrayAdapter);
+    }
 
+    public void onClickClear(View v) {
+
+        arrayAdapter.clear();
+        listViewHandle.setAdapter(arrayAdapter);
     }
 }
