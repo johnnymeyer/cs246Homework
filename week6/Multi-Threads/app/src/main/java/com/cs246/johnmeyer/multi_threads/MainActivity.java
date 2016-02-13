@@ -1,38 +1,31 @@
 package com.cs246.johnmeyer.multi_threads;
 
-import android.content.Context;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
-    FileOutputStream outputStream;
     String fileName = "numbers.txt";
     ArrayAdapter<String> arrayAdapter;
-    ListView listViewHandle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,69 +66,110 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickWriteFile(View v) {
+    public void createFile(View v) {
+        //Log.d("Debug", "Inside OnclickWriteFile");
+        new Create().execute(getFilesDir() + "numbers.txt");
+    }
 
-        try {
-            outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+    public void loadFile(View v) {
 
+        new Load().execute(getFilesDir() + "numbers.txt");
+    }
+
+    private class Create extends AsyncTask<String, Integer, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
             try {
+                FileWriter fileWriter = new FileWriter(params[0]);
+
                 for (int i = 1; i < 11; i++) {
-                    writer.write(i + "\n");
+                    fileWriter.write(i + "\n");
                     try {
                         Thread.sleep(250);
-                    }
-                    catch (InterruptedException e) {
+                        publishProgress(i);
+                    } catch (InterruptedException e) {
                         // should never get here
                     }
                 }
-                writer.close();
+                fileWriter.close();
 
-                Toast.makeText(getApplicationContext(), "File Created", Toast.LENGTH_LONG).show();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            return null;
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            ((ProgressBar) findViewById(R.id.progressBar)).setProgress(10 * progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            Toast.makeText(getApplicationContext(), "File Created", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void onClickLoadFile(View v) {
-        List<String> contents = new ArrayList<String>();
-        File filesDir = getFilesDir();
-        File toOpen = new File(filesDir, fileName);
-        listViewHandle = (ListView) findViewById(R.id.listView);
+    private class Load extends AsyncTask<String, Integer, Void> {
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(toOpen));
-            String line;
+        List<String> contents = new ArrayList<>();
 
-            while ((line = br.readLine()) != null) {
-                contents.add(line);
-                try {
-                    Thread.sleep(250);
+        @Override
+        protected void onPreExecute() {
+            ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            File filesDir = getFilesDir();
+            File toOpen = new File(filesDir, fileName);
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(toOpen));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    contents.add(line);
+                    try {
+                        Thread.sleep(250);
+                        publishProgress(10);
+                    } catch (InterruptedException e) {
+                        // should never get here
+                    }
                 }
-                catch (InterruptedException e) {
-                    // should never get here
-                }
+                br.close();
+            } catch (IOException e) {
+                System.out.println(e);
             }
-            br.close();
-        }
-        catch (IOException e) {
-            System.out.println(e);
+
+            return null;
         }
 
-        arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, contents);
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            ProgressBar bar = ((ProgressBar) findViewById(R.id.progressBar));
+            bar.setProgress(bar.getProgress() + values[0]);
+        }
 
-        listViewHandle.setAdapter(arrayAdapter);
+        @Override
+        protected void onPostExecute(Void thisVoid) {
+            ListView listViewHandle = (ListView) findViewById(R.id.listView);
+            arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, contents);
+            listViewHandle.setAdapter(arrayAdapter);
+        }
+
     }
 
-    public void onClickClear(View v) {
-
+    public void clearContents(View v) {
         arrayAdapter.clear();
-        listViewHandle.setAdapter(arrayAdapter);
+        ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
     }
 }

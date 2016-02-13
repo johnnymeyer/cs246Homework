@@ -38,11 +38,11 @@
         android:layout_height="wrap_content"
         android:text="CREATE"
         android:id="@+id/button"
-        android:onClick="onClickWriteFile"
+        android:onClick="createFile"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="82dp" />
+        android:layout_marginBottom="71dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -50,9 +50,9 @@
         android:layout_height="wrap_content"
         android:text="LOAD"
         android:id="@+id/button2"
-        android:layout_alignTop="@+id/button"
+        android:layout_alignBottom="@+id/button"
         android:layout_centerHorizontal="true"
-        android:onClick="onClickLoadFile" />
+        android:onClick="loadFile" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -63,5 +63,5 @@
         android:layout_alignTop="@+id/button2"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="onClickClear" />
+        android:onClick="clearContents" />
 </RelativeLayout>
