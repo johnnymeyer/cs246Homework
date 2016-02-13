@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createFile(View v) {
-        //Log.d("Debug", "Inside OnclickWriteFile");
         new Create().execute(getFilesDir() + "numbers.txt");
     }
 
