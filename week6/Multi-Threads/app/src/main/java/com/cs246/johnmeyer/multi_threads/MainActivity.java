@@ -22,6 +22,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MainActivity
+ *
+ * This is the class that houses everything needed.
+ * This program is testing out working with different threads.
+ * There are three buttons. One to create a file, one to load
+ * the file and display the contents, and the last to clear the
+ * screen. Creating and loading the file are done in different threads.
+ * This program uses AsyncTask to manage the different threads.
+ *
+ * @author John Meyer
+ * @collaborators Klenton Stone, Edward Doyle, Wellesley Shumway
+ */
 public class MainActivity extends AppCompatActivity {
 
     String fileName = "numbers.txt";
@@ -66,22 +79,57 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Function createFile
+     * This is the function that will be called when the create
+     * button is pressed. It will create a new instance of the
+     * Create class.
+     *
+     * @param v
+     */
     public void createFile(View v) {
         new Create().execute(getFilesDir() + "numbers.txt");
     }
 
+    /**
+     * Function loadFile
+     * This is the function that will be called when the Load button
+     * is pressed. It will crate a new instance of the Load class.
+     *
+     * @param v
+     */
     public void loadFile(View v) {
 
         new Load().execute(getFilesDir() + "numbers.txt");
     }
 
+    /**
+     * Class Create
+     * This class will handle all that is needed to create a file
+     * and have it run in a different thread. It uses AsyncTask to
+     * make this happen, so certain functions are needed to be
+     * Overriden.
+     */
     private class Create extends AsyncTask<String, Integer, Void> {
 
+        /**
+         * Function onPreExecute
+         * The progress bar will be reset before anything else happens.
+         */
         @Override
         protected void onPreExecute() {
             ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
         }
 
+        /**
+         * Function doInBackground
+         * This is the logic for creating the file. It will all happen in the
+         * background on a different thread. The file being created is a simple
+         * list of numbers.
+         *
+         * @param params
+         * @return null
+         */
         @Override
         protected Void doInBackground(String... params) {
             try {
@@ -105,26 +153,60 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Function onProgressUpdate
+         * This is the function that will execute during the process.
+         * It will simple update the progress bar.
+         *
+         * @param progress
+         */
         @Override
         protected void onProgressUpdate(Integer... progress) {
             ((ProgressBar) findViewById(R.id.progressBar)).setProgress(10 * progress[0]);
         }
 
+        /**
+         * Function onPostExecute
+         * After the process if finished running. This will happen.
+         * This function will just display a text box to the screen saying the file
+         * has been created.
+         * @param v
+         */
         @Override
         protected void onPostExecute(Void v) {
             Toast.makeText(getApplicationContext(), "File Created", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Class Load
+     * This class will handle all that is needed to load a file
+     * and have it run in a different thread. It uses AsyncTask to
+     * make this happen, so certain functions are needed to be
+     * Overriden.
+     */
     private class Load extends AsyncTask<String, Integer, Void> {
 
         List<String> contents = new ArrayList<>();
 
+        /**
+         * Function onPreExecute
+         * The progress bar will be reset before anything else happens.
+         */
         @Override
         protected void onPreExecute() {
             ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
         }
 
+        /**
+         * Function doInBackground
+         * This is the logic for loading the file. It will all happen in the
+         * background on a different thread. The file being loaded is a simple
+         * list of numbers that was created earlier.
+         *
+         * @param params
+         * @return null
+         */
         @Override
         protected Void doInBackground(String... params) {
 
@@ -152,12 +234,27 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Function onProgressUpdate
+         * This is the function that will execute during the process.
+         * It will simple update the progress bar.
+         *
+         * @param values
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             ProgressBar bar = ((ProgressBar) findViewById(R.id.progressBar));
             bar.setProgress(bar.getProgress() + values[0]);
         }
 
+        /**
+         * Function onPostExecute
+         * After the process if finished running. This will happen.
+         * This function will update the arrayAdapter to show the file
+         * that has been loaded.
+         *
+         * @param thisVoid
+         */
         @Override
         protected void onPostExecute(Void thisVoid) {
             ListView listViewHandle = (ListView) findViewById(R.id.listView);
@@ -167,6 +264,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Function clearContents
+     * This will clear the arrayAdapter and the progress bar.
+     *
+     * @param v
+     */
     public void clearContents(View v) {
         arrayAdapter.clear();
         ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
