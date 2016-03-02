@@ -1,5 +1,7 @@
 package com.cs246.johnmeyer.datastorage;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,14 +21,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+
             }
         });
+
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        int defaultValue = sharedPreferences.getInt("value", -6);
+
+        if (defaultValue == -6)
+            defaultValue = 0;
+
+        ((TextView) this.findViewById(R.id.textView)).setText(Integer.toString(defaultValue));
     }
 
     @Override
@@ -48,5 +61,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClickAdvance(View v) {
+        Integer num = Integer.parseInt(((TextView) this.findViewById(R.id.textView)).getText().toString());
+        ((TextView) this.findViewById(R.id.textView)).setText(Integer.toString(++num));
+    }
+
+    public void onClickSave(View v) {
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("value", Integer.parseInt(((TextView) this.findViewById(R.id.textView)).getText().toString()));
+        editor.commit();
     }
 }
