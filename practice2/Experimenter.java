@@ -1,4 +1,3 @@
-package socialmedia;
 
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.Set;
  * 
  * @author sburton
  */
-public class Experimenter {
+public abstract class Experimenter {
     
     /**
      * Runs the Experiment and outputs the results
@@ -103,25 +102,8 @@ public class Experimenter {
      * @param testSet
      * @return A mapping of true or false to each entry in the test set.
      */
-    private Map<SocialMediaEntry, Boolean> classifyEntries(Set<SocialMediaEntry> trainingSet,
-            Set<SocialMediaEntry> testSet) {
-        
-        System.out.println("Running classifier...");
-        
-        // In a real use case, build a machine learning model from the training set,
-        // then use it to classify the entries in the test set.
-
-        
-        Map<SocialMediaEntry, Boolean> results = new HashMap<>();
-        
-        // Right now this is putting a "true" for everything
-        // TODO: This method will need to be changes / replaced.
-        for (SocialMediaEntry entry : testSet) {
-            results.put(entry, true);
-        }
-        
-        return results;
-    }
+    public abstract Map<SocialMediaEntry, Boolean> classifyEntries(Set<SocialMediaEntry> trainingSet,
+            Set<SocialMediaEntry> testSet);
     
     /**
      * Outputs the results of the experiment

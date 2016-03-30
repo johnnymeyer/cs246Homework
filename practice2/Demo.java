@@ -1,4 +1,3 @@
-package socialmedia;
 
 
 /**
@@ -12,7 +11,7 @@ public class Demo implements Runnable {
     public void run() {
         // TODO: Add code here to run all three experiements
         
-        Experimenter experimenter = new Experimenter();
+        RandomExperimenter experimenter = new RandomExperimenter();
         experimenter.runTest();
     }
     
